@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
+### Layout needs to be adjusted
 
 import pandas as pd
 import numpy as np
@@ -19,10 +18,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
-# ## Load Data
-
-# In[2]:
-
 
 #df = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\Datensatz_Batteriekontaktierung.xlsx', sep=';') #Datensatz von Simon
 df = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\S1_DN_relabeled.xlsx', sep=';') #Datensatz für Vergleichbarkeit
@@ -30,9 +25,6 @@ df = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\S1_DN_relabel
 #del df['LWMID_2']
 df2 = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\s2dn.xlsx', sep=';', header=None)
 df.head()
-
-
-# In[3]:
 
 
 ##Datensatz Simon
@@ -49,18 +41,12 @@ df.head()
 # X = X.merge(df2, how='inner', left_index=True, right_index=True) #Sensor1dn & Sensor2dn mit labels
 
 
-# In[4]:
-
 
 ##Datensatz für Vergleichbarkeit
 y = df.iloc[:,0] #Label
 X = df.iloc[:,3:115] #Features
 X.head()
 
-
-# ## Statistical Metrics
-
-# In[5]:
 
 
 ## MEAN:
@@ -86,19 +72,11 @@ X = pd.concat([X_mean, X_std], axis=1) #XGBoost Minimum Dimension = 2!
 
 
 # ## Train-/Test split
-
-# In[6]:
-
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, train_size=None, random_state=None) #stratify?
 #X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.15, train_size=None, random_state=None)
 
 
 # ## PCA
-
-# In[7]:
-
-
 #pca = PCA(.95)
 #pca.fit(X_train)
 #pca.n_components_
@@ -107,10 +85,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, train_s
 
 
 # ## Classification - fit & predict
-
-# In[8]:
-
-
 xgbc = xgb.XGBClassifier(n_estimators=600,
                         learning_rate=0.1,
                         subsample=0.6,
@@ -119,45 +93,22 @@ xgbc = xgb.XGBClassifier(n_estimators=600,
                         gamma= 1,
                         colsample_bytree= 0.8)
 
-
-# In[9]:
-
-
 xgbc.fit(X_train, y_train)
-
-
-# In[10]:
-
 
 pred = xgbc.predict(X_test)
 
 
-# In[11]:
-
-
 accuracy_score(y_test, pred)
 
-
 # ### Cross Validation
-
-# In[12]:
-
-
 xgbc = xgb.XGBClassifier()
 kfold = StratifiedKFold(n_splits=10, random_state=7)
 results = cross_val_score(xgbc, X, y, cv=kfold)
-
-
-# In[13]:
-
 
 print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
 
 # ## Hyperparameters - Non Exhaustive Grid Search
-
-# In[14]:
-
 
 #params = {
 #        'min_child_weight': [1, 5, 10],
@@ -169,14 +120,8 @@ print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 #        }
 
 
-# In[15]:
-
 
 #xgbc = xgb.XGBClassifier(n_estimators=600, silent=True)
-
-
-# In[16]:
-
 
 #folds = 5
 #param_comb = 20
@@ -188,22 +133,12 @@ print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 #random_search.fit(X_train, y_train)
 
 
-# In[17]:
-
-
 #print(random_search.best_params_)
-
-
-# In[18]:
-
 
 #print(random_search.best_score_ * 2 - 1)
 
 
 # ## False Positive/Negative
-
-# In[19]:
-
 
 diff = pred - y_test
 correct = 0
@@ -218,15 +153,10 @@ for j in diff:
         fn += 1
 
 
-# In[20]:
-
-
 print("#Correct: ", correct)
 print("#False Positive: ", fp)
 print("#False Negative: ", fn)
 
-
-# In[21]:
 
 
 print("Share False Positive: ", fp*100/(correct+fp+fn))
@@ -234,9 +164,6 @@ print("Share False Negative: ", fn*100/(correct+fp+fn))
 
 
 # ## Appendix: Standarddeviation (Not Needed! See Accuracy CV!)
-
-# In[22]:
-
 
 #score_array = []
 #for train_index, test_index in kfold.split(X, y):
@@ -250,9 +177,6 @@ print("Share False Negative: ", fn*100/(correct+fp+fn))
 #
 #standard_dev = np.std(score_array)
 #print("Standard deviation: ", standard_dev)
-
-
-# In[ ]:
 
 
 
