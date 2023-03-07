@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-### Layout needs to be adjusted
 
 import pandas as pd
 import numpy as np
@@ -19,12 +15,12 @@ from sklearn.decomposition import PCA
 
 
 
-#df = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\Datensatz_Batteriekontaktierung.xlsx', sep=';') #Datensatz von Simon
-df = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\S1_DN_relabeled.xlsx', sep=';') #Datensatz für Vergleichbarkeit
-#del df['LWMID_1'] 
+#df = pd.read_excel(r'..\Datensatz_Batteriekontaktierung.xlsx') #Datensatz von Simon
+df = pd.read_excel(r'..\S1_DN.xlsx')
+#del df['LWMID_1']
 #del df['LWMID_2']
-df2 = pd.read_excel(r'C:\Users\Simon\Desktop\Python\Practice2_KIiPE\s2dn.xlsx', sep=';', header=None)
-df.head()
+
+#df2 = pd.read_excel(r'..\s2dn.xlsx')
 
 
 ##Datensatz Simon
@@ -36,7 +32,6 @@ df.head()
 #X = df.iloc[:,116:228] #Only Sensor1dn
 #X2 = df2 #Only Sensor2dn (MATLAB)
 #X = X1.merge(X2, how='inner', left_index=True, right_index=True) #Sensor1dn mit labels
-
 # X = df.iloc[:,4:340] #All
 # X = X.merge(df2, how='inner', left_index=True, right_index=True) #Sensor1dn & Sensor2dn mit labels
 
@@ -45,11 +40,8 @@ df.head()
 ##Datensatz für Vergleichbarkeit
 y = df.iloc[:,0] #Label
 X = df.iloc[:,3:115] #Features
-X.head()
 
-
-
-## MEAN:
+##MEAN:
 X_mean = X.mean(axis=1)
 #X = pd.concat([X_mean, X_mean], axis=1) #XGBoost Minimum Dimension = 2!
 
@@ -102,7 +94,7 @@ accuracy_score(y_test, pred)
 
 # ### Cross Validation
 xgbc = xgb.XGBClassifier()
-kfold = StratifiedKFold(n_splits=10, random_state=7)
+kfold = StratifiedKFold(n_splits=10, random_state=None)
 results = cross_val_score(xgbc, X, y, cv=kfold)
 
 print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
